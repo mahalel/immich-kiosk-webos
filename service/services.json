@@ -1,0 +1,10 @@
+{
+  "id": "com.mahalel.immichkiosk.service",
+  "description": "Stores the Immich Kiosk connection settings",
+  "services": [
+    {
+      "name": "com.mahalel.immichkiosk.service",
+      "description": "Reads and writes Immich Kiosk settings"
+    }
+  ]
+}
