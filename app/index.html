@@ -4,9 +4,45 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Immich Kiosk</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main id="app"></main>
+  <main id="app">
+    <section id="loading-panel" class="panel">
+      <p>Loading settings…</p>
+    </section>
+
+    <section id="settings-panel" class="panel hidden" aria-labelledby="settings-title">
+      <h1 id="settings-title">Immich Kiosk</h1>
+      <p class="intro">Enter the address of your Immich Kiosk server.</p>
+      <form id="settings-form">
+        <label for="kiosk-url">Kiosk URL</label>
+        <input id="kiosk-url" name="kiosk-url" type="url" inputmode="url" autocomplete="off" required>
+
+        <label for="kiosk-password">Kiosk password <span class="optional">(optional)</span></label>
+        <input id="kiosk-password" name="kiosk-password" type="password" autocomplete="off">
+
+        <label for="interval-seconds">Photo interval (seconds)</label>
+        <input id="interval-seconds" name="interval-seconds" type="number" min="10" max="3600" step="1" value="60" required>
+
+        <div class="actions">
+          <button id="save-settings" type="submit">Save settings</button>
+          <button id="cancel-settings" type="button" class="secondary">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="launcher-panel" class="panel hidden" aria-labelledby="launcher-title">
+      <h1 id="launcher-title">Immich Kiosk</h1>
+      <p id="launcher-message" class="intro">Your Kiosk server is ready.</p>
+      <div class="actions">
+        <button id="open-kiosk" type="button">Open Kiosk</button>
+        <button id="edit-settings" type="button" class="secondary">Settings</button>
+      </div>
+    </section>
+
+    <p id="error-message" class="error" role="alert"></p>
+  </main>
   <script src="app.js"></script>
 </body>
 </html>
