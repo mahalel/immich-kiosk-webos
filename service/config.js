@@ -1,6 +1,6 @@
 'use strict';
 
-var URL = require('url').URL;
+var url = require('url');
 
 var DEFAULT_CONFIG = {
   kioskUrl: '',
@@ -18,7 +18,20 @@ function parseKioskUrl(value) {
 
   var parsed;
   try {
-    parsed = new URL(value);
+    if (typeof url.URL === 'function') {
+      var modern = new url.URL(value);
+      parsed = {
+        protocol: modern.protocol,
+        hostname: modern.hostname,
+        host: modern.host,
+        auth: modern.username || modern.password,
+        pathname: modern.pathname,
+        search: modern.search,
+        hash: modern.hash
+      };
+    } else {
+      parsed = url.parse(value);
+    }
   } catch (error) {
     throw new Error('Kiosk URL is invalid');
   }
@@ -26,13 +39,13 @@ function parseKioskUrl(value) {
   if ((parsed.protocol !== 'http:' && parsed.protocol !== 'https:') || !parsed.hostname) {
     throw new Error('Kiosk URL must use http or https and include a host');
   }
-  if (parsed.username || parsed.password) {
+  if (parsed.auth) {
     throw new Error('Kiosk URL must not include credentials');
   }
 
   var pathname = parsed.pathname;
   if (pathname === '/' || /^\/+$/ .test(pathname)) pathname = '';
-  return parsed.protocol + '//' + parsed.host + pathname + parsed.search + parsed.hash;
+  return parsed.protocol + '//' + parsed.host + pathname + (parsed.search || '') + (parsed.hash || '');
 }
 
 function normalizeInterval(value) {

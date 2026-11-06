@@ -1,8 +1,16 @@
 'use strict';
 
 var assert = require('node:assert/strict');
+var fs = require('node:fs');
 var test = require('node:test');
 var config = require('../service/config');
+
+test('usesNodeCompatibleUrlParser', function () {
+  var source = fs.readFileSync('service/config.js', 'utf8');
+  assert.doesNotMatch(source, /require\('url'\)\.URL/);
+  assert.match(source, /url\.URL/);
+  assert.match(source, /url\.parse/);
+});
 
 test('rejectsUnsupportedSchemes', function () {
   assert.equal(config.validateConfig({ kioskUrl: 'file:///tmp/x' }).ok, false);
