@@ -12,7 +12,7 @@ WebOSWindow {
     visible: true
     color: "black"
 
-    property string configFileUrl: "file:///var/luna/preferences/com.mahalel.immichkiosk.json"
+    property string configFileUrl: "file:///media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json"
     property string kioskUrl: ""
     property string kioskPassword: ""
     property int intervalSeconds: 60

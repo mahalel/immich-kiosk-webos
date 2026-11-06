@@ -88,7 +88,7 @@ The published IPK contains no user-specific host or password. A small webOS serv
 - `getConfig` — returns the saved values or safe defaults;
 - `saveConfig` — validates and atomically persists the new values.
 
-The service stores its JSON state under a persistent service-preferences path such as `/var/luna/preferences/com.mahalel.immichkiosk/config.json`. The exact writable path will be verified on the target TV before implementation is considered complete.
+On the target webOS 10.3.1 TV, the service jail mounts `/var/luna/preferences` read-only but gives the installed service directory a writable mount. The service therefore stores its JSON state beside its installed payload at `/media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json`, which the Glasshouse QML saver reads by absolute `file://` URL. This path is tied to the service ID and must be rechecked on other webOS versions.
 
 ```json
 {
@@ -158,5 +158,5 @@ The implementation is complete only when all of these are demonstrated:
 - Whether the first cross-fade duration should be one or two seconds.
 - The exact `ares-package` invocation and service package layout.
 - The smallest static test harness that runs without adding a dependency.
-- The exact persistent service-preferences path and the QML filesystem URL for it, to be verified on the target TV.
+- Whether other webOS versions expose the same writable installed-service directory; the target webOS 10.3.1 path is verified.
 - A bounded image-load timeout and retry interval, provided the visible-image failure behavior stays as specified.

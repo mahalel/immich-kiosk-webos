@@ -17,6 +17,13 @@ function withTempFile(callback) {
   }
 }
 
+test('usesWritablePersistentWebOSServicePath', function () {
+  assert.equal(
+    store.CONFIG_PATH,
+    '/media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json'
+  );
+});
+
 test('returnsDefaultsWhenStateIsMissing', function () {
   withTempFile(function (filePath) {
     assert.deepEqual(store.readConfig(filePath), store.DEFAULT_CONFIG);

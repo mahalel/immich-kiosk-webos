@@ -21,7 +21,7 @@ test('usesOnlyCompatibleImports', function () {
 });
 
 test('loadsSharedConfigPath', function () {
-  assert.match(qml, /file:\/\/\/var\/luna\/preferences\/com\.mahalel\.immichkiosk\.json/);
+  assert.match(qml, /file:\/\/\/media\/developer\/apps\/usr\/palm\/services\/com\.mahalel\.immichkiosk\.service\/config\.json/);
   assert.match(qml, /XMLHttpRequest/);
 });
 

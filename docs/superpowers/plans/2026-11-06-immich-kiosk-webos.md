@@ -4,7 +4,7 @@
 
 **Goal:** Build a public LG webOS IPK that lets users configure any Immich Kiosk host and supplies a Glasshouse-compatible photo screensaver using that host's `/image` endpoint.
 
-**Architecture:** A plain webOS web app provides a first-run settings/launcher UI and redirects to the configured Kiosk page. A small ES5 Luna service validates and persists `{kioskUrl, kioskPassword, intervalSeconds}` at `/var/luna/preferences/com.mahalel.immichkiosk.json`. Glasshouse discovers `app/assets/screensaver-main.qml`; the QML saver reads that JSON file, fetches Kiosk images, applies slow randomized motion and cross-fades, and fades to black after a bounded stale period.
+**Architecture:** A plain webOS web app provides a first-run settings/launcher UI and redirects to the configured Kiosk page. On the target webOS 10.3.1 TV, a small ES5 Luna service validates and persists `{kioskUrl, kioskPassword, intervalSeconds}` at `/media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json`, because the service jail's `/var/luna/preferences` is read-only while its installed service directory is writable. Glasshouse discovers `app/assets/screensaver-main.qml`; the QML saver reads that JSON file, fetches Kiosk images, applies slow randomized motion and cross-fades, and fades to black after a bounded stale period.
 
 **Tech Stack:** Plain HTML/CSS/ES5 browser JavaScript, webOS `WebOSServiceBridge`, webOS `webos-service`, QtQuick QML 2.4, Node's built-in `node:test`, `ares-package` from `@webos-tools/cli` 3.2.3 or an equivalent installed webOS CLI.
 
@@ -98,7 +98,7 @@ git commit -m "feat: scaffold configurable webOS kiosk app"
 - Modify: `service/package.json` only if the service entry point needs to be declared
 
 **Interfaces:**
-- `service/config-store.js` exports `CONFIG_PATH = "/var/luna/preferences/com.mahalel.immichkiosk.json"`.
+- `service/config-store.js` exports `CONFIG_PATH = "/media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json"` for the verified webOS 10.3.1 target.
 - `readConfig(filePath) -> Config` returns `DEFAULT_CONFIG` when the file is absent, invalid JSON, or invalid according to `validateConfig`.
 - `writeConfig(filePath, config) -> void` writes normalized JSON through a same-directory temporary file and atomic rename; it does not log or return the password.
 - Luna method `getConfig` responds with `{returnValue: true, config}`.
@@ -202,7 +202,7 @@ git commit -m "feat: add configurable kiosk launcher"
 - Create: `test/screensaver-static.test.js`
 
 **Interfaces and fixed values:**
-- Config file URL: `file:///var/luna/preferences/com.mahalel.immichkiosk.json`.
+- Config file URL: `file:///media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json`.
 - Image endpoint: `<kioskUrl>/image`.
 - Default interval: 60 seconds; service-normalized range: 10–3600 seconds.
 - Two image layers; one-second cross-fade; image load timeout: 15 seconds; stale limit: two missed refreshes.

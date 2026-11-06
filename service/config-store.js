@@ -3,7 +3,7 @@
 var fs = require('fs');
 var config = require('./config');
 
-var CONFIG_PATH = '/var/luna/preferences/com.mahalel.immichkiosk.json';
+var CONFIG_PATH = '/media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json';
 
 function defaults() {
   return {
