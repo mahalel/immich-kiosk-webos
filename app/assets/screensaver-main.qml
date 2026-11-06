@@ -162,7 +162,7 @@ WebOSWindow {
             fillMode: Image.PreserveAspectCrop
             smooth: true
             onStatusChanged: {
-                if (status === Image.Loaded) win.imageLoaded(0);
+                if (status === Image.Ready) win.imageLoaded(0);
                 else if (status === Image.Error) win.imageFailed(0);
             }
         }
@@ -186,7 +186,7 @@ WebOSWindow {
             fillMode: Image.PreserveAspectCrop
             smooth: true
             onStatusChanged: {
-                if (status === Image.Loaded) win.imageLoaded(1);
+                if (status === Image.Ready) win.imageLoaded(1);
                 else if (status === Image.Error) win.imageFailed(1);
             }
         }
