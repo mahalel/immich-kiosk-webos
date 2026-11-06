@@ -9,7 +9,7 @@ This app does not talk to Immich directly. It opens your Kiosk server and asks t
 - First-run setup on the TV for any Kiosk URL.
 - Optional Kiosk password and photo interval.
 - Full-screen launch of the configured Kiosk page.
-- Glasshouse-compatible screensaver with slow randomized photo motion and cross-fades.
+- Glasshouse-compatible screensaver that shows complete photos with black letterboxing when needed and cross-fades between them.
 - Temporary network failures keep the last photo briefly; prolonged failures fade to black and retry.
 - No cloud service, analytics, or credentials in the published package.
 
@@ -89,7 +89,7 @@ After installing the app:
 
 Glasshouse will report that this saver reaches the network. That is expected: it loads photos from your Kiosk server.
 
-The saver uses a black base, a conservative dark overlay, slow pan/zoom motion, and one-second cross-fades. This reduces static OLED wear, but it does not replace LG's panel-care features. Use Glasshouse's **Poweroff after** setting if the TV should eventually enter standby.
+The saver uses a black base, a conservative dark overlay, complete-photo fitting, and one-second cross-fades. Portrait or non-16:9 photos may have black letterboxing rather than being cropped. This does not replace LG's panel-care features. Use Glasshouse's **Poweroff after** setting if the TV should eventually enter standby.
 
 If testing goes wrong, select **LG default** in Glasshouse's screensaver tab before troubleshooting. The Glasshouse screensaver files can also be inspected over SSH; do not delete the active saver while it is running.
 

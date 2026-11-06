@@ -37,7 +37,7 @@ The TV already has the two important pieces: Homebrew Channel for installing the
 - Glasshouse lists an installed app as a screensaver when its application directory contains `assets/screensaver-main.qml` (or `assets/screensaver.qml`). It stages only that QML as the screen saver; the QML must load other app state by an absolute path.
 - Glasshouse permits network access for added screensavers but labels it as a caution. This app will therefore be shown as reaching the network.
 - Glasshouse's documented compatible baseline is `import QtQuick 2.4` plus `import Eos.Window 0.1`, with a 1920×1080 screensaver window. The QML must declare the screensaver window type and app ID exactly as documented.
-- Glasshouse's screensaver design guidance matters for this photo use-case: content should move slowly across the panel, avoid a fixed center, start from a randomized position, remain dark enough for long OLED runs, avoid flashes/sound, and fail to black rather than freeze a bright frame. Glasshouse's own poweroff-after setting remains responsible for ending a long-running saver.
+- Glasshouse's screensaver design guidance matters for this photo use-case: remain dark enough for long OLED runs, avoid flashes/sound, and fail to black rather than freeze a bright frame. This app prioritizes preserving complete photos over pan/zoom motion; cross-fades and 15-second rotation still prevent a single image from remaining indefinitely. Glasshouse's own poweroff-after setting remains responsible for ending a long-running saver.
 - The target TV was inspected over SSH: LG OLED48C46LA.ANRQLJD, webOS 10.3.1, firmware 33.31.68, Glasshouse 0.139.0. Glasshouse reports custom screensavers available and writable; its current mode is the built-in `user-pigs` saver. The documented installed-app path exists at `/media/developer/apps/usr/palm/applications`.
 - This project targets that TV first. The QML remains on the QtQuick 2.4 baseline, while the normal web app may assume the webOS 10 web engine. HTTP and publicly trusted HTTPS Kiosk URLs are in scope; self-signed HTTPS is not a first-version requirement.
 - Browser `localStorage` is not shared with the separate QML screensaver process. A small ES5 webOS Luna service will therefore own the saved configuration and persist it in service preferences; the normal app writes it through Luna and the QML saver reads the service-owned JSON snapshot from the TV filesystem.
@@ -123,7 +123,7 @@ There is no iframe, proxy, Immich API client, or duplicated Kiosk UI.
 6. A timer requests the next image at `intervalSeconds` (default 15 seconds). `cache: false` and a changing query value prevent the previous JPEG from being reused.
 7. Any remote key is handled by the TV/Glasshouse screensaver lifecycle and dismisses the saver. The QML code does not intercept keys.
 
-The QML will use a black background, `PreserveAspectCrop`, asynchronous image loading, and no sound or video. Each visible photo will receive a slow, subtle randomized pan/zoom over its dwell period so no pixel pattern remains fixed; the transition will cross-fade without flashes. A fixed dark overlay will keep the average brightness conservative for an OLED panel. It will not call Glasshouse's private APIs or try to keep the TV's normal screensaver alive.
+The QML will use a black background, `PreserveAspectFit`, asynchronous image loading, and no sound or video. Complete photos are preserved with black letterboxing when their aspect ratio differs from the screen; the transition will cross-fade without flashes. A fixed dark overlay will keep the average brightness conservative for an OLED panel. It will not call Glasshouse's private APIs or try to keep the TV's normal screensaver alive.
 
 ### Failure behavior
 
@@ -149,7 +149,7 @@ The implementation is complete only when all of these are demonstrated:
 3. The IPK installs on the rooted TV through Homebrew Channel or `ares-install`.
 4. First launch shows the settings form; saving `https://kiosk.maha.nz/` persists it, and relaunching opens the configured Kiosk page. The TV remote can operate the existing Kiosk UI.
 5. Glasshouse's Screensaver tab lists the app-provided saver and marks the network caution.
-6. Selecting and starting the saver displays a Kiosk image, slowly moves it, changes to another image after the configured interval, and eventually fades to black during a prolonged Kiosk outage.
+6. Selecting and starting the saver displays a complete Kiosk image, cross-fades to another image after the configured interval, and eventually fades to black during a prolonged Kiosk outage.
 7. A remote key dismisses the saver and the TV returns to the previous app.
 
 ## Builder decisions left open

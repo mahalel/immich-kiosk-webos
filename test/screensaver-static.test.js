@@ -39,9 +39,12 @@ test('disablesImageCache', function () {
 test('hasTwoImageLayers', function () {
   assert.match(qml, /id:\s*imageA/);
   assert.match(qml, /id:\s*imageB/);
-  assert.match(qml, /Image\.PreserveAspectCrop/);
+  assert.match(qml, /Image\.PreserveAspectFit/);
   assert.match(qml, /Image\.Ready/);
   assert.doesNotMatch(qml, /Image\.Loaded/);
+  assert.doesNotMatch(qml, /Image\.PreserveAspectCrop/);
+  assert.doesNotMatch(qml, /width: win\.width \*/);
+  assert.doesNotMatch(qml, /height: win\.height \*/);
   assert.match(qml, /NumberAnimation\s*\{\s*duration:\s*1000/);
 });
 

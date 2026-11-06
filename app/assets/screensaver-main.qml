@@ -22,10 +22,6 @@ WebOSWindow {
     property int pendingLayer: -1
     property int missedRefreshes: 0
     property int imageNonce: 0
-    property real motionTime: Math.random() * 1000
-    property real motionSeedX: Math.random() * 6.283185
-    property real motionSeedY: Math.random() * 6.283185
-    property real motionSeedZoom: Math.random() * 6.283185
     property int maxMissedRefreshes: 2
     property int imageTimeoutMs: 15000
 
@@ -153,13 +149,10 @@ WebOSWindow {
 
         Image {
             id: imageA
-            width: win.width * (1.08 + 0.04 * (0.5 + 0.5 * Math.sin(win.motionTime * 0.025 + win.motionSeedZoom)))
-            height: win.height * (1.08 + 0.04 * (0.5 + 0.5 * Math.sin(win.motionTime * 0.025 + win.motionSeedZoom)))
-            x: (win.width - width) * (0.5 + 0.5 * Math.sin(win.motionTime * 0.031 + win.motionSeedX))
-            y: (win.height - height) * (0.5 + 0.5 * Math.sin(win.motionTime * 0.027 + win.motionSeedY))
+            anchors.fill: parent
             asynchronous: true
             cache: false
-            fillMode: Image.PreserveAspectCrop
+            fillMode: Image.PreserveAspectFit
             smooth: true
             onStatusChanged: {
                 if (status === Image.Ready) win.imageLoaded(0);
@@ -177,13 +170,10 @@ WebOSWindow {
 
         Image {
             id: imageB
-            width: win.width * (1.08 + 0.04 * (0.5 + 0.5 * Math.sin(win.motionTime * 0.025 + win.motionSeedZoom)))
-            height: win.height * (1.08 + 0.04 * (0.5 + 0.5 * Math.sin(win.motionTime * 0.025 + win.motionSeedZoom)))
-            x: (win.width - width) * (0.5 + 0.5 * Math.sin(win.motionTime * 0.031 + win.motionSeedX))
-            y: (win.height - height) * (0.5 + 0.5 * Math.sin(win.motionTime * 0.027 + win.motionSeedY))
+            anchors.fill: parent
             asynchronous: true
             cache: false
-            fillMode: Image.PreserveAspectCrop
+            fillMode: Image.PreserveAspectFit
             smooth: true
             onStatusChanged: {
                 if (status === Image.Ready) win.imageLoaded(1);
@@ -196,14 +186,6 @@ WebOSWindow {
         anchors.fill: parent
         color: "black"
         opacity: 0.18
-    }
-
-    Timer {
-        id: motionTimer
-        interval: 33
-        running: true
-        repeat: true
-        onTriggered: win.motionTime += 0.033
     }
 
     Timer {

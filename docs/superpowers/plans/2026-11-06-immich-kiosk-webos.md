@@ -4,7 +4,7 @@
 
 **Goal:** Build a public LG webOS IPK that lets users configure any Immich Kiosk host and supplies a Glasshouse-compatible photo screensaver using that host's `/image` endpoint.
 
-**Architecture:** A plain webOS web app provides a first-run settings/launcher UI and redirects to the configured Kiosk page. On the target webOS 10.3.1 TV, a small ES5 Luna service validates and persists `{kioskUrl, kioskPassword, intervalSeconds}` at `/media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json`, because the service jail's `/var/luna/preferences` is read-only while its installed service directory is writable. Glasshouse discovers `app/assets/screensaver-main.qml`; the QML saver reads that JSON file, fetches Kiosk images, applies slow randomized motion and cross-fades, and fades to black after a bounded stale period.
+**Architecture:** A plain webOS web app provides a first-run settings/launcher UI and redirects to the configured Kiosk page. On the target webOS 10.3.1 TV, a small ES5 Luna service validates and persists `{kioskUrl, kioskPassword, intervalSeconds}` at `/media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json`, because the service jail's `/var/luna/preferences` is read-only while its installed service directory is writable. Glasshouse discovers `app/assets/screensaver-main.qml`; the QML saver reads that JSON file, fetches complete Kiosk images with aspect-fit letterboxing, cross-fades them, and fades to black after a bounded stale period.
 
 **Tech Stack:** Plain HTML/CSS/ES5 browser JavaScript, webOS `WebOSServiceBridge`, webOS `webos-service`, QtQuick QML 2.4, Node's built-in `node:test`, `ares-package` from `@webos-tools/cli` 3.2.3 or an equivalent installed webOS CLI.
 
@@ -18,7 +18,7 @@
 - Accept only `http:` and `https:` Kiosk URLs; self-signed HTTPS is not a first-version requirement.
 - Kiosk album selection and ordering remain on the Kiosk server; the TV calls `GET /image` and does not call Immich directly.
 - The QML saver uses no sound or video, makes no Glasshouse-private API calls, and treats network access as an expected Glasshouse-listed caution.
-- Photos move slowly with randomized pan/zoom; transitions do not flash; a prolonged refresh failure fades to black instead of freezing a bright photo.
+- Complete photos take priority over full-bleed framing: use `PreserveAspectFit`, black letterboxing when needed, and cross-fades without flashes; a prolonged refresh failure fades to black.
 - Keep the service ES5-compatible and dependency-light for webOS; use Node built-ins for local tests.
 
 ## Review Focus
@@ -206,7 +206,7 @@ git commit -m "feat: add configurable kiosk launcher"
 - Image endpoint: `<kioskUrl>/image`.
 - Default interval: 15 seconds; service-normalized range: 10–3600 seconds.
 - Two image layers; one-second cross-fade; image load timeout: 15 seconds; stale limit: two missed refreshes.
-- Motion refresh: approximately 30 updates per second, with random seed/phase, slow pan/zoom, and a conservative black overlay.
+- Rendering: `PreserveAspectFit`, black letterboxing for mismatched aspect ratios, one-second cross-fades, and a conservative black overlay.
 
 - [ ] **Step 1: Write static QML tests**
 
@@ -226,11 +226,11 @@ On completion, load the service snapshot using `XMLHttpRequest`, parse and valid
 
 - [ ] **Step 4: Implement the two-layer image pipeline**
 
-Use asynchronous, non-cached `Image` items. Load the next image into the hidden layer, switch visibility only after `Image.Loaded`, then cross-fade the layers. A failed or timed-out load must not immediately replace the visible image.
+Use asynchronous, non-cached `Image` items with `PreserveAspectFit`. Load the next image into the hidden layer, switch visibility only after `Image.Ready`, then cross-fade the layers. A failed or timed-out load must not immediately replace the visible image.
 
 - [ ] **Step 5: Implement OLED-safe motion and stale handling**
 
-Drive a slow pan/zoom from a randomized phase/seed at roughly 30 Hz. Keep motion subtle and avoid flashes. Count failed/empty/timeout refreshes; after two missed refreshes, fade all photo opacity to zero and leave the base black until a successful image arrives. Retry at a bounded interval.
+Fit each image without cropping and retain the one-second cross-fade between layers. Count failed/empty/timeout refreshes; after two missed refreshes, fade all photo opacity to zero and leave the base black until a successful image arrives. Retry at a bounded interval.
 
 - [ ] **Step 6: Run static QML tests and all unit tests**
 
@@ -315,8 +315,8 @@ On the TV:
 - [ ] **Step 7: Verify the Glasshouse catalog and live saver**
 
 From the TV or its SSH shell, query Glasshouse's local API and confirm the installed-app entry is present as `app-com-mahalel-immichkiosk`, available, and marked with the network caution. Select it in Glasshouse, start it, and verify:
-- a Kiosk image loads;
-- the image slowly moves rather than remaining fixed;
+- a complete Kiosk image loads without cropping;
+- aspect-ratio differences produce black letterboxing rather than zoomed content;
 - a later image cross-fades in;
 - a temporary Kiosk failure does not immediately blank the current image;
 - a prolonged failure eventually fades to black;
