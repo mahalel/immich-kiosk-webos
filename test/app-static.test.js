@@ -22,6 +22,11 @@ test('containsConfigurationFields', function () {
   });
 });
 
+test('usesFifteenSecondDefault', function () {
+  assert.match(html, /id="interval-seconds"[^>]+value="15"/);
+  assert.match(script, /intervalSeconds: 15/);
+});
+
 test('containsLauncherActions', function () {
   assert.match(html, /id="open-kiosk"/);
   assert.match(html, /id="edit-settings"/);

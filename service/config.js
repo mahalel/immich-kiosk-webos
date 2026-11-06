@@ -5,7 +5,7 @@ var url = require('url');
 var DEFAULT_CONFIG = {
   kioskUrl: '',
   kioskPassword: '',
-  intervalSeconds: 60
+  intervalSeconds: 15
 };
 
 function parseKioskUrl(value) {

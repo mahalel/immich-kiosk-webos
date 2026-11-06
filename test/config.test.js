@@ -38,8 +38,8 @@ test('normalizesTrailingSlashes', function () {
 test('clampsIntervalToTenThrough3600', function () {
   assert.equal(config.normalizeConfig({ kioskUrl: 'https://kiosk.example', intervalSeconds: 1 }).intervalSeconds, 10);
   assert.equal(config.normalizeConfig({ kioskUrl: 'https://kiosk.example', intervalSeconds: 9999 }).intervalSeconds, 3600);
-  assert.equal(config.normalizeConfig({ kioskUrl: 'https://kiosk.example' }).intervalSeconds, 60);
-  assert.equal(config.normalizeConfig({ kioskUrl: 'https://kiosk.example', intervalSeconds: 'not-a-number' }).intervalSeconds, 60);
+  assert.equal(config.normalizeConfig({ kioskUrl: 'https://kiosk.example' }).intervalSeconds, 15);
+  assert.equal(config.normalizeConfig({ kioskUrl: 'https://kiosk.example', intervalSeconds: 'not-a-number' }).intervalSeconds, 15);
 });
 
 test('acceptsEmptyPassword', function () {

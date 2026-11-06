@@ -57,11 +57,11 @@
   function fillSettings(config) {
     element('kiosk-url').value = config.kioskUrl || '';
     element('kiosk-password').value = config.kioskPassword || '';
-    element('interval-seconds').value = config.intervalSeconds || 60;
+    element('interval-seconds').value = config.intervalSeconds || 15;
   }
 
   function showSettings(config) {
-    fillSettings(config || {kioskUrl: '', kioskPassword: '', intervalSeconds: 60});
+    fillSettings(config || {kioskUrl: '', kioskPassword: '', intervalSeconds: 15});
     element('cancel-settings').style.display = currentConfig && currentConfig.kioskUrl ? '' : 'none';
     showPanel('settings-panel');
   }
@@ -78,7 +78,7 @@
     callService('getConfig', {}, function (error, response) {
       if (error) {
         showError(error.message);
-        showSettings({kioskUrl: '', kioskPassword: '', intervalSeconds: 60});
+        showSettings({kioskUrl: '', kioskPassword: '', intervalSeconds: 15});
         return;
       }
       if (!response.config || !response.config.kioskUrl) {

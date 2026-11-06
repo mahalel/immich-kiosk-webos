@@ -15,7 +15,7 @@ WebOSWindow {
     property string configFileUrl: "file:///media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json"
     property string kioskUrl: ""
     property string kioskPassword: ""
-    property int intervalSeconds: 60
+    property int intervalSeconds: 15
     property bool configReady: false
     property bool hasImage: false
     property int activeLayer: 0
@@ -65,7 +65,7 @@ WebOSWindow {
         kioskUrl = parsed.kioskUrl;
         kioskPassword = parsed.kioskPassword || "";
         intervalSeconds = Number(parsed.intervalSeconds);
-        if (!isFinite(intervalSeconds) || isNaN(intervalSeconds)) intervalSeconds = 60;
+        if (!isFinite(intervalSeconds) || isNaN(intervalSeconds)) intervalSeconds = 15;
         intervalSeconds = Math.round(intervalSeconds);
         intervalSeconds = Math.max(10, Math.min(3600, intervalSeconds));
         configReady = true;

@@ -44,7 +44,7 @@
 - Create: `.gitignore`
 
 **Interfaces:**
-- Produces `service.DEFAULT_CONFIG` with `kioskUrl: ""`, `kioskPassword: ""`, and `intervalSeconds: 60`.
+- Produces `service.DEFAULT_CONFIG` with `kioskUrl: ""`, `kioskPassword: ""`, and `intervalSeconds: 15`.
 - Produces `service.normalizeConfig(input) -> Config`, returning a normalized safe config or throwing a validation error.
 - Produces `service.validateConfig(input) -> {ok: boolean, config?: Config, error?: string}`.
 - Produces `service.appendQuery(url, name, value) -> string`, preserving an existing query and URL-encoding the value.
@@ -204,7 +204,7 @@ git commit -m "feat: add configurable kiosk launcher"
 **Interfaces and fixed values:**
 - Config file URL: `file:///media/developer/apps/usr/palm/services/com.mahalel.immichkiosk.service/config.json`.
 - Image endpoint: `<kioskUrl>/image`.
-- Default interval: 60 seconds; service-normalized range: 10–3600 seconds.
+- Default interval: 15 seconds; service-normalized range: 10–3600 seconds.
 - Two image layers; one-second cross-fade; image load timeout: 15 seconds; stale limit: two missed refreshes.
 - Motion refresh: approximately 30 updates per second, with random seed/phase, slow pan/zoom, and a conservative black overlay.
 

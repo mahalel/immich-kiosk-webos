@@ -45,6 +45,11 @@ test('hasTwoImageLayers', function () {
   assert.match(qml, /NumberAnimation\s*\{\s*duration:\s*1000/);
 });
 
+test('usesFifteenSecondDefault', function () {
+  assert.match(qml, /property int intervalSeconds: 15/);
+  assert.match(qml, /intervalSeconds = 15/);
+});
+
 test('hasStaleFailurePath', function () {
   assert.match(qml, /MAX_MISSED_REFRESHES\s*:\s*2/);
   assert.match(qml, /IMAGE_TIMEOUT_MS\s*:\s*15000/);

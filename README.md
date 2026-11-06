@@ -67,7 +67,7 @@ On the **first launch**:
 
 1. Enter your Immich Kiosk URL, for example `https://kiosk.maha.nz/`.
 2. Enter the Kiosk password only if your Kiosk instance requires it.
-3. Set the photo interval in seconds. Values are limited to 10–3600 seconds.
+3. Set the photo interval in seconds. The default is 15 seconds; values are limited to 10–3600 seconds.
 4. Select **Save settings**, then **Open Kiosk**.
 
 The app saves settings through `com.mahalel.immichkiosk.service` beside the installed service:

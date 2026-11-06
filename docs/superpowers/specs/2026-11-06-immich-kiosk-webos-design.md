@@ -94,11 +94,11 @@ On the target webOS 10.3.1 TV, the service jail mounts `/var/luna/preferences` r
 {
   "kioskUrl": "",
   "kioskPassword": "",
-  "intervalSeconds": 60
+  "intervalSeconds": 15
 }
 ```
 
-The URL must be `http:` or `https:`. The interval is clamped to a reasonable range, for example 10–3600 seconds. The password is optional, is never logged, and is sent as Kiosk's `password` query parameter. It is not an Immich API key.
+The URL must be `http:` or `https:`. The interval defaults to 15 seconds and is clamped to 10–3600 seconds. The password is optional, is never logged, and is sent as Kiosk's `password` query parameter. It is not an Immich API key.
 
 The normal web app uses `WebOSServiceBridge` to read and save the config. The QML saver reads the service's JSON snapshot with `XMLHttpRequest` using a `file://` URL. This avoids pretending that browser `localStorage` is shared with the separate QML process.
 
@@ -120,7 +120,7 @@ There is no iframe, proxy, Immich API client, or duplicated Kiosk UI.
 3. QML loads the shared config snapshot from the service-preferences path.
 4. It requests `GET <kioskUrl>/image` with a cache-busting query value and the optional Kiosk password.
 5. Two full-screen `Image` items alternate. A new image is only made visible after it has loaded successfully, then the old image cross-fades away.
-6. A timer requests the next image at `intervalSeconds` (default 60 seconds). `cache: false` and a changing query value prevent the previous JPEG from being reused.
+6. A timer requests the next image at `intervalSeconds` (default 15 seconds). `cache: false` and a changing query value prevent the previous JPEG from being reused.
 7. Any remote key is handled by the TV/Glasshouse screensaver lifecycle and dismisses the saver. The QML code does not intercept keys.
 
 The QML will use a black background, `PreserveAspectCrop`, asynchronous image loading, and no sound or video. Each visible photo will receive a slow, subtle randomized pan/zoom over its dwell period so no pixel pattern remains fixed; the transition will cross-fade without flashes. A fixed dark overlay will keep the average brightness conservative for an OLED panel. It will not call Glasshouse's private APIs or try to keep the TV's normal screensaver alive.
